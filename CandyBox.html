@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>Project: Travel webpage</title>
+		<style> 
+        body {background-color: rgb(242, 162, 239);}
+        
+        p {
+            color: rgb(40, 157, 247);
+			
+			padding-top: 30px;
+			padding-right: 10px;
+			padding-bottom: 30px;
+			padding-left: 40px;
+        }
+        h1 {
+            color: rgb(165, 38, 255);
+			padding-left:30xp;
+        }
+        
+        h2 {
+            color: rgb(3, 129, 255);
+			padding-left:30xp;
+        }
+        
+        h3 {
+            color: rgb(209, 19, 209);
+			padding-top:30px;
+			padding-left:30px;
+        }
+	
+	/* Add a black background color to the top navigation */
+		.topnav {
+	    background-color: #333;
+		 overflow: hidden;
+		 position: sticky;
+		top: 0;
+		width: 100%;
+		
+}
+
+		/* Style the links inside the navigation bar */
+		.topnav a {
+		  float: left;
+		  color: #f2f2f2;
+		  text-align: center;
+		  padding: 6px 8px;
+		  text-decoration: none;
+		  font-size: 17px;
+		}
+
+		/* Change the color of links on hover */
+		.topnav a:hover {
+		  background-color: #ddd;
+		  color: black;
+		}
+
+		/* Add a color to the active/current link */
+		.topnav a.active {
+		  background-color: #4CAF50;
+		  color: white;
+		}
+		
+		p.solid {border-style: solid;}
+}
+        </style>
+         
+    </head>
+    <body>
+	
+        <h1> Creators:</h1>
+        <h2> Parisa and Alicia</h2>
+		 <div class="topnav">
+  <a  href="#intro">Intro</a>
+  <a href="#material">Material</a>
+    <a href="#howitworks">How it works</a>
+  <a href="#projectcode">Project Code</a>
+</div> 
+        <h1>Project Name:</h1>
+        <h2> The ULTIMATE candy box 2.0 </h2>
+		
+        <h3 id="intro"> Intro </h3>
+		<p class="solid">The ULTIMATE CANDY BOX 2.0 is a RFID candy dispenser that dispenses candy when the correct tag is scanned on the reader.</p>
+		
+	    <h3> Discription</h3>
+		<p class="solid">The <strong>ultimate</strong> candy box 2.0 is a <em>safe, fun, and easy </em> way to store your candy! Its a tall cylinder with a tunnel that goes through the machine and dispenses out your candy. You can fit a 
+		variety of different candies such as gumballs, jawbreakers, etc... it also has a window you can look through to see what candy is in stock!</p>
+        
+         <h3>How we came up with the idea</h3>
+		 <p class="solid">Sally suggested that we make a jellybean can that opens but instead, we decided to do a candy dispenser because almost everyone likes candy.</p>
+
+        <h3 id="material"> Materials </h3>
+		<p class="solid">
+RFID R522 Reader <br>
+RFID Tag <br>
+RFID Card <br>
+Micro servo motor <br>
+Jumper wires <br>
+Arduino UNO board <br>
+Alligator clips <br>
+Wires <br>
+Blue LED <br>
+Red  <br>
+Electrical tape <br>
+Plastic bottle <br>
+Clear Tape <br>
+Candy <br>
+Cardboard <br>
+Glue gun <br>
+Glue sticks <br>
+Compass <br>
+Exacto knife <br>
+Scissors <br>
+9V Battery
+    
+</p>
+
+  <h3 id="howitworks">How it Works </h3>
+  <p class="solid"> When the battery is plugged in and when the correct tag is close enough to the reader, the tag uses the reader’s electricity to send it’s UID back. If the reader recognizes the UID, 
+ the blue light will turn on. The arduino board then runs the code for the motor, so that the micro servo motor will spin 120 degrees counter clockwise, 
+ so that the the hole on the moving plate will match up with the hole on the non-moving plate. Then, the candy slides down the chute. 
+ If you scan the wrong tag, the red light will turn on, as the UID isn’t recognized. As a result, you get no candy. </p>
+
+ 
+ <h3 id="projectcode"> Project code </h3>
+ <p class="solid"> #include <Servo.h> <br>
+#include <SPI.h> <br>
+#include <MFRC522.h> <br>
+
+#define SS_PIN 10 <br>
+#define RST_PIN 9 <br>
+#define LED_OK 6 <br>
+#define LED_DENIED 7 <br>
+
+MFRC522 rfid(SS_PIN, RST_PIN); // Instance of the class <br>
+
+Servo servo; <br>
+int angle = 120; <br>
+
+void setup() <br>{
+  // Initialize RFID <br>
+  Serial.begin(9600);   // Initiate a serial communication <br>
+  SPI.begin();      // Initiate  SPI bus <br>
+  rfid.PCD_Init();   // Initiate rfid <br>
+  Serial.println("Approximate your card to the reader..."); <br>
+  Serial.println(); <br>
+
+  // Init LED <br>
+  pinMode(LED_OK, OUTPUT); <br>
+  pinMode(LED_DENIED, OUTPUT); <br>
+
+  // Init Servo Motor <br>
+  servo.attach(8); <br>
+  servo.write(angle); <br>
+  
+void loop() <br>
+{ <br>
+  // Look for new cards <br>
+  if ( ! rfid.PICC_IsNewCardPresent()) <br>
+  { <br>
+    return; <br>
+  } <br>
+  // Select one of the cards <br>
+  if ( ! rfid.PICC_ReadCardSerial()) <br>
+  { <br>
+    return; <br>
+  } <br>
+  //Show UID on serial monitor <br>
+  Serial.print("UID tag :"); <br>
+  String content= ""; <br>
+  byte letter; <br>
+  for (byte i = 0; i < rfid.uid.size; i++) <br>
+  { <br>
+     Serial.print(rfid.uid.uidByte[i] < 0x10 ? " 0" : " "); <br>
+     Serial.print(rfid.uid.uidByte[i], HEX); <br>
+     content.concat(String(rfid.uid.uidByte[i] < 0x10 ? " 0" : " ")); <br>
+     content.concat(String(rfid.uid.uidByte[i], HEX)); <br>
+  } <br>
+  Serial.println(); <br>
+  Serial.print("Message : "); <br>
+  content.toUpperCase(); <br>
+  if (content.substring(1) == "9B <br>
+} <br>
+
+ 34 59 A3") //change here the UID of the card/cards that you want to give access <br>
+  { <br>
+    Serial.println("Authorized access"); <br>
+    Serial.println(); <br>
+    digitalWrite(LED_OK, HIGH); <br>
+    servo.write(0); <br>
+    delay(1000); <br>
+    digitalWrite(LED_OK, LOW); <br>
+    servo.write(120); <br>
+    delay(1000); <br>
+  } <br>
+ 
+ else   { <br>
+    Serial.println(" Access denied"); <br>
+    digitalWrite(LED_DENIED, HIGH);  <br>            
+    delay(1000); <br>
+    digitalWrite(LED_DENIED, LOW); <br>
+    delay(1000); <br>
+  } <br>
+  
+</p>
+
+		
+    </body>
+</html>
+
+
+
+
+
